@@ -40,7 +40,7 @@ public class App
                     cognome=my_scan.nextLine();
                     System.out.println("Inserisci la password del cliente: ");
                     password=my_scan.nextLine();
-                    Client cliente=new Client(nome, cognome,password)
+                    Client cliente=new Client(nome, cognome,password);
                     if(banca.findClient(cliente)==false){
                         System.out.println("Utente non trovato, creazione nuovo utente");
                         banca.aggiungiCliente(cliente);
