@@ -1,4 +1,5 @@
 package org.example;
+import java.io.*;
 import java.util.ArrayList;
 public class Client {
     private String nome;
@@ -20,7 +21,9 @@ public class Client {
          this.portafoglio=(100.0);
      }
 
-     public void setClient(double saldo,double debito,double portafoglio){
+    public Client() {}
+
+    public void setClient(double saldo, double debito, double portafoglio){
         this.debito=debito;
         this.saldo=saldo;
         this.portafoglio=portafoglio;
@@ -40,6 +43,34 @@ public class Client {
             saldo -= ripagato;
             debito -= ripagato;
         }
+        ArrayList<String> lines = new ArrayList<>();
+        try (InputStream is = Bank.class.getClassLoader().getResourceAsStream("Clients.csv");
+             BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+            String line;
+            String newLine;
+            while ((line = br.readLine()) != null) {
+                lines.add(line);
+                String name=line.substring(0,line.indexOf(";"));
+                String password;
+                line=line.substring(line.indexOf(";")+1,line.length()-1);
+                password=line.substring(0,line.indexOf(";"));
+                if(name.equals(this.getNome()+this.getCognome()) && password.equals(this.getPassword())){
+                    lines.removeLast();
+                    newLine=this.getNome()+';'+this.getCognome()+';'+this.password+';'+saldo+';'+debito+';'+portafoglio+';';
+                    lines.add(newLine);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Errore: file non trovato!");
+        }
+        String filePath = Bank.class.getClassLoader().getResource("").getPath() + "Clients.csv";
+        File file = new File(filePath);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(this.getNome()+this.getCognome()+';'+this.getPassword()+';'+this.getSaldo()+';'
+                    +this.getDebito()+ ';'+this.getPortafoglio()+';'+this.getInvestimenti().toString()+';'+'\n');
+        } catch (IOException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
     }
 
     public void preleva(double importo) {
@@ -49,7 +80,34 @@ public class Client {
         }
         saldo -= importo;
         portafoglio += importo;
-
+        ArrayList<String> lines = new ArrayList<>();
+        try (InputStream is = Bank.class.getClassLoader().getResourceAsStream("Clients.csv");
+             BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+            String line;
+            String newLine;
+            while ((line = br.readLine()) != null) {
+                lines.add(line);
+                String name=line.substring(0,line.indexOf(";"));
+                String password;
+                line=line.substring(line.indexOf(";")+1,line.length()-1);
+                password=line.substring(0,line.indexOf(";"));
+                if(name.equals(this.getNome()+this.getCognome()) && password.equals(this.getPassword())){
+                    lines.removeLast();
+                    newLine=this.getNome()+';'+this.getCognome()+';'+this.password+';'+saldo+';'+debito+';'+portafoglio+';';
+                    lines.add(newLine);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Errore: file non trovato!");
+        }
+        String filePath = Bank.class.getClassLoader().getResource("").getPath() + "Clients.csv";
+        File file = new File(filePath);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(this.getNome()+this.getCognome()+';'+this.getPassword()+';'+this.getSaldo()+';'
+                    +this.getDebito()+ ';'+this.getPortafoglio()+';'+this.getInvestimenti().toString()+';'+'\n');
+        } catch (IOException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
     }
     public void avanzaTempo(int mesi) {
         portafoglio += 100.0 * mesi;

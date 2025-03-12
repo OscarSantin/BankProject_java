@@ -7,11 +7,12 @@ import java.util.Scanner;
 /*
 *
 */
-public class App 
+public class App
 {
     public static void main( String[] args )
     {
         Bank banca=new Bank();
+        Client cliente=new Client();
         int scelta = -1;
 
         Scanner my_scan=new Scanner(System.in);
@@ -19,28 +20,37 @@ public class App
         System.out.println("Benvenuto nell'app della Banca!");
 
         while (scelta != 0) {
-            System.out.println("\nMenu principale:");
-            System.out.println("1. Log in/Registrazione");
-            System.out.println("2. Deposita denaro");
-            System.out.println("3. Preleva denaro");
-            System.out.println("4. Effettua un investimento");
-            System.out.println("5. Avanza nel tempo");
-            System.out.println("6. Mostra lo stato di tutti i clienti");
-            System.out.println("0. Esci");
-            System.out.println("Scegli un'opzione: ");
-            scelta= my_scan.nextInt();
-
+            if(cliente.getNome()!=null){
+                System.out.println("\nMenu principale:");
+                System.out.println("1. Log in/Registrazione");
+                System.out.println("2. Deposita denaro");
+                System.out.println("3. Preleva denaro");
+                System.out.println("4. Effettua un investimento");
+                System.out.println("5. Avanza nel tempo");
+                System.out.println("6. Mostra lo stato di tutti i clienti");
+                System.out.println("0. Esci");
+                System.out.println("Scegli un'opzione: ");
+                scelta= newpositiveInt();
+            }
+            else{
+                System.out.println("1. Log in/Registrazione");
+                System.out.println("6. Mostra lo stato di tutti i clienti");
+                System.out.println("0. Esci");
+                System.out.println("Per selezionare il resto delle operazioni effettuare il login ");
+                System.out.println("Scegli un'opzione: ");
+                scelta= newpositiveInt();
+            }
             switch (scelta) {
                 case 1: {
-                    my_scan.nextLine();
+                    //my_scan.nextLine();
                     String nome, cognome, password;
                     System.out.println("Inserisci il nome del cliente: ");
-                    nome=my_scan.nextLine();
+                    nome=newStr();
                     System.out.println("Inserisci il cognome del cliente: ");
-                    cognome=my_scan.nextLine();
+                    cognome=newStr();
                     System.out.println("Inserisci la password del cliente: ");
-                    password=my_scan.nextLine();
-                    Client cliente=new Client(nome, cognome,password);
+                    password=newStr();
+                    cliente=new Client(nome, cognome,password);
                     if(banca.findClient(cliente)==false){
                         System.out.println("Utente non trovato, creazione nuovo utente");
                         banca.aggiungiCliente(cliente);
@@ -49,37 +59,23 @@ public class App
                     break;
                 }
                 case 2: {
-                    my_scan.nextLine();
-                    int indice;
+                    //my_scan.nextLine();
                     double importo;
-                    System.out.println("Seleziona il cliente (0 per il primo, 1 per il secondo, ecc.): ");
-                    indice=my_scan.nextInt();
-                    if (indice < 0 || indice >= banca.numeroClienti()) {
-                        System.out.println("Cliente non valido.");
-                        break;
-                    }
                     System.out.println("Inserisci l'importo da depositare: ");
-                    importo=my_scan.nextInt();
-                    banca.getCliente(indice).deposita(importo);
+                    importo=newpositiveDouble();
+                    cliente.deposita(importo);
                     break;
                 }
                 case 3: {
-                    my_scan.nextLine();
-                    int indice;
+                    //my_scan.nextLine();
                     double importo;
-                    System.out.println("Seleziona il cliente (0 per il primo, 1 per il secondo,ecc.): ");
-                    indice=my_scan.nextInt();
-                    if (indice < 0 || indice >= banca.numeroClienti()) {
-                        System.out.println("Cliente non valido.");
-                        break;
-                    }
                     System.out.println("Inserisci l'importo da prelevare: ");
-                    importo=my_scan.nextInt();
-                    banca.getCliente(indice).preleva(importo);
+                    importo=newpositiveDouble();
+                    cliente.preleva(importo);
                     break;
                 }
                 case 4: {
-                    my_scan.nextLine();
+                    //my_scan.nextLine();
                     int indice;
                     double valore;
                     int durata;
@@ -94,7 +90,7 @@ public class App
                     my_scan.nextLine();
 
                     System.out.println("Inserisci il tipo di investimento (basso/medio/alto): ");
-                    tipo=my_scan.nextLine();
+                    tipo=newStr();
                     System.out.println("Inserisci il valore dell'investimento: ");
                     valore=my_scan.nextInt();
                     System.out.println("Inserisci la durata in mesi: ");
@@ -109,7 +105,7 @@ public class App
                 }
 
                 case 5: {
-                    my_scan.nextLine();
+                    //my_scan.nextLine();
                     int mesi;
                     System.out.println("Inserisci il numero di mesi da avanzare: ");
                     mesi=my_scan.nextInt();
@@ -124,13 +120,13 @@ public class App
                 }
 
                 case 6: {
-                    my_scan.nextLine();
+                    //my_scan.nextLine();
                     System.out.println("\nStato di tutti i clienti:\n");
                     banca.mostraStatiClienti();
                     break;
                 }
                 case 0:
-                    my_scan.nextLine();
+                    //my_scan.nextLine();
                     System.out.println("Uscita dall'app. Arrivederci!");
                     break;
                 default:
@@ -140,4 +136,32 @@ public class App
 
         return ;
     }
+    public static String newStr(){
+        Scanner scan=new Scanner(System.in);
+        String s=scan.nextLine();
+        while(s.isEmpty() || s.isBlank()){
+            System.out.println("La stringa non può essere vuota o essere composta solo da spazi!");
+            s=scan.nextLine().trim();
+        }
+        return s;
+    }
+    public static int newpositiveInt(){
+        Scanner scan=new Scanner(System.in);
+        int i= scan.nextInt();
+        while(i<0){
+            System.out.println("Errore: inserisici un numero valido e positivo");
+            i= scan.nextInt();
+        }
+        return i;
+    }
+    public static double newpositiveDouble(){
+        Scanner scan=new Scanner(System.in);
+        double d=scan.nextDouble();
+        while(d<0.0){
+            System.out.println("Errore: inserisici un numero valido e positivo");
+            d= scan.nextDouble();
+        }
+        return d;
+    }
+
 }
