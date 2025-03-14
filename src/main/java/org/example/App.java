@@ -75,20 +75,10 @@ public class App
                     break;
                 }
                 case 4: {
-                    //my_scan.nextLine();
                     int indice;
                     double valore;
                     int durata;
                     String tipo;
-
-                    System.out.println("Seleziona il cliente (0 per il primo, 1 per il secondo,ecc.): ");
-                    indice=my_scan.nextInt();
-                    if (indice < 0 || indice >= banca.numeroClienti()) {
-                        System.out.println("Cliente non valido.");
-                        break;
-                    }
-                    my_scan.nextLine();
-
                     System.out.println("Inserisci il tipo di investimento (basso/medio/alto): ");
                     tipo=newStr();
                     System.out.println("Inserisci il valore dell'investimento: ");
@@ -96,21 +86,18 @@ public class App
                     System.out.println("Inserisci la durata in mesi: ");
                     durata=my_scan.nextInt();
                     Investiment nuovoInvestimento=new Investiment(tipo, valore, durata);
-                    if (banca.getCliente(indice).aggiungiInvestimento(nuovoInvestimento)) {
+                    if (cliente.aggiungiInvestimento(nuovoInvestimento)) {
                         System.out.println("Investimento aggiunto con successo!");
-                    } else {
-                        System.out.println("Fondi insufficienti per l'investimento.");
                     }
                     break;
                 }
 
                 case 5: {
-                    //my_scan.nextLine();
                     int mesi;
                     System.out.println("Inserisci il numero di mesi da avanzare: ");
                     mesi=my_scan.nextInt();
 
-                    banca.avanzareTempo(mesi);
+                    banca.avanzareTempo(cliente,mesi);
 
 
                     System.out.println("\nStato aggiornato dei clienti dopo l'avanzamento del tempo:");
@@ -120,13 +107,11 @@ public class App
                 }
 
                 case 6: {
-                    //my_scan.nextLine();
                     System.out.println("\nStato di tutti i clienti:\n");
                     banca.mostraStatiClienti();
                     break;
                 }
                 case 0:
-                    //my_scan.nextLine();
                     System.out.println("Uscita dall'app. Arrivederci!");
                     break;
                 default:

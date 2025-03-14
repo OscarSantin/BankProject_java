@@ -9,6 +9,7 @@ public class Client {
     private double debito;
     private double portafoglio;
     private ArrayList<Investiment> investimenti=new ArrayList<>();
+    private ArrayList<Investiment> investimentsHistory=new ArrayList<>();
 
 
     public Client(final String nome, final String cognome,final String password)
@@ -23,10 +24,12 @@ public class Client {
 
     public Client() {}
 
-    public void setClient(double saldo, double debito, double portafoglio){
+    public void setClient(double saldo, double debito, double portafoglio,ArrayList<Investiment> investiments){
         this.debito=debito;
         this.saldo=saldo;
         this.portafoglio=portafoglio;
+        this.investimenti=investiments;
+        //this.investimentsHistory=investimentsHistory;
      }
 
     public void deposita(double importo) {
@@ -43,34 +46,9 @@ public class Client {
             saldo -= ripagato;
             debito -= ripagato;
         }
-        ArrayList<String> lines = new ArrayList<>();
-        try (InputStream is = Bank.class.getClassLoader().getResourceAsStream("Clients.csv");
-             BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-            String line;
-            String newLine;
-            while ((line = br.readLine()) != null) {
-                lines.add(line);
-                String name=line.substring(0,line.indexOf(";"));
-                String password;
-                line=line.substring(line.indexOf(";")+1,line.length()-1);
-                password=line.substring(0,line.indexOf(";"));
-                if(name.equals(this.getNome()+this.getCognome()) && password.equals(this.getPassword())){
-                    lines.removeLast();
-                    newLine=this.getNome()+';'+this.getCognome()+';'+this.password+';'+saldo+';'+debito+';'+portafoglio+';';
-                    lines.add(newLine);
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Errore: file non trovato!");
-        }
-        String filePath = Bank.class.getClassLoader().getResource("").getPath() + "Clients.csv";
-        File file = new File(filePath);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write(this.getNome()+this.getCognome()+';'+this.getPassword()+';'+this.getSaldo()+';'
-                    +this.getDebito()+ ';'+this.getPortafoglio()+';'+this.getInvestimenti().toString()+';'+'\n');
-        } catch (IOException e) {
-            System.out.println("Errore: " + e.getMessage());
-        }
+        System.out.println("Deposito andatoa buon fine!");
+
+        addInfo();
     }
 
     public void preleva(double importo) {
@@ -80,34 +58,9 @@ public class Client {
         }
         saldo -= importo;
         portafoglio += importo;
-        ArrayList<String> lines = new ArrayList<>();
-        try (InputStream is = Bank.class.getClassLoader().getResourceAsStream("Clients.csv");
-             BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-            String line;
-            String newLine;
-            while ((line = br.readLine()) != null) {
-                lines.add(line);
-                String name=line.substring(0,line.indexOf(";"));
-                String password;
-                line=line.substring(line.indexOf(";")+1,line.length()-1);
-                password=line.substring(0,line.indexOf(";"));
-                if(name.equals(this.getNome()+this.getCognome()) && password.equals(this.getPassword())){
-                    lines.removeLast();
-                    newLine=this.getNome()+';'+this.getCognome()+';'+this.password+';'+saldo+';'+debito+';'+portafoglio+';';
-                    lines.add(newLine);
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Errore: file non trovato!");
-        }
-        String filePath = Bank.class.getClassLoader().getResource("").getPath() + "Clients.csv";
-        File file = new File(filePath);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write(this.getNome()+this.getCognome()+';'+this.getPassword()+';'+this.getSaldo()+';'
-                    +this.getDebito()+ ';'+this.getPortafoglio()+';'+this.getInvestimenti().toString()+';'+'\n');
-        } catch (IOException e) {
-            System.out.println("Errore: " + e.getMessage());
-        }
+        System.out.println("Prelievo andato a buon fine!");
+
+        addInfo();
     }
     public void avanzaTempo(int mesi) {
         portafoglio += 100.0 * mesi;
@@ -134,6 +87,7 @@ public class Client {
             System.out.println("Attenzione: Il saldo è negativo (" + saldo +
                     " €). Non è possibile effettuare nuovi investimenti finché il debito non è ripagato.");
         }
+        addInfo();
     }
 
     @Override
@@ -141,10 +95,12 @@ public class Client {
         return "Client{" +
                 "nome='" + nome + '\'' +
                 ", cognome='" + cognome + '\'' +
-                ", password='" + password + '\'' +
+                ", password='" + "**" + '\'' +
                 ", saldo=" + saldo +
                 ", debito=" + debito +
                 ", portafoglio=" + portafoglio +
+                ", investimenti attivi=" + formatInvestiments() +
+                ", investimentsHistory=" + formatInvestimentsHistory("") +
                 '}';
     }
 
@@ -172,6 +128,8 @@ public class Client {
         }
         saldo -= inv.getValore();
         investimenti.add(inv);
+        investimentsHistory.add(inv);
+        addInfo();
         return true;
     }
 
@@ -179,6 +137,69 @@ public class Client {
 
     public ArrayList<Investiment> getInvestimenti() { return investimenti; }
 
+    public final void addInfo(){
+        ArrayList<String> lines = new ArrayList<>();
+        try (InputStream is = Bank.class.getClassLoader().getResourceAsStream("Clients.csv");
+             BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+            String line;
+            String newLine;
+            while ((line = br.readLine()) != null) {
+                lines.add(line);
+                String name=line.substring(0,line.indexOf(";"));
+                String password;
+                line=line.substring(line.indexOf(";")+1,line.length()-1);
+                password=line.substring(0,line.indexOf(";"));
+                String investimentsHistory="";
+                line=line.substring(line.indexOf(";")+1);
+                line=line.substring(line.indexOf(";")+1);
+                line=line.substring(line.indexOf(";")+1);
+                line=line.substring(line.indexOf(";")+1);
+                line=line.substring(line.indexOf(";")+1);
+                investimentsHistory=line.substring(0,line.indexOf(";"));
+                if(name.equals(this.getNome()+this.getCognome()) && password.equals(this.getPassword())){
+                    lines.removeLast();
+                    newLine=this.getNome()+this.getCognome()+';'+this.password+';'+saldo+';'+debito+';'+portafoglio+';'+formatInvestiments()+';'+formatInvestimentsHistory(investimentsHistory)+';';
+                    newLine=newLine.replaceAll(";+", ";");
+                    lines.add(newLine);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Errore: file non trovato!");
+        }
+        String filePath = Bank.class.getClassLoader().getResource("").getPath() + "Clients.csv";
+        File file = new File(filePath);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for(int i=0;i<lines.size();i++){
+                writer.write(lines.get(i)+'\n');
+            }
+        } catch (IOException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+    public String formatInvestiments(){
+        String totalInv=new String("");
+        if(investimenti.size()==0){
+            return "";
+        }
+        for(int c=0;c< investimenti.size();c++){
+            totalInv+=investimenti.get(c)+",";
+        }
+        totalInv=totalInv.substring(0,totalInv.length()-1);
+        return totalInv;
+    }
+
+    public String formatInvestimentsHistory(String previousones){
+        String totalInv=new String("");
+        totalInv+=previousones;
+        if(investimentsHistory.size()==0){
+            return "";
+        }
+        for(int c=0;c< investimentsHistory.size();c++){
+            totalInv+=investimentsHistory.get(c)+",";
+        }
+        totalInv=totalInv.substring(0,totalInv.length()-1);
+        return totalInv;
+    }
     public final double getSaldo()  { return saldo; }
     public final double getDebito()  { return debito; }
     public final String getNome()  { return nome; }

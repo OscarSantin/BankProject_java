@@ -9,14 +9,14 @@ public class Investiment {
     private int durata;
     private int mesiPassati;
 
-    private void impostaParametri(final String tipo) {   //rename: setParameters
-        if (tipo == "basso") {
+    private void impostaParametri(final String tipo) {
+        if (tipo.equals("basso") ) {
             rendimento = 0.05;
             rischio = 0.10;
-        } else if (tipo == "medio") {
+        } else if (tipo.equals("medio")) {
             rendimento = 0.10;
             rischio = 0.20;
-        } else if (tipo == "alto") {
+        } else if (tipo.equals("alto")) {
             rendimento = 0.15;
             rischio = 0.30;
         } else {
@@ -25,7 +25,10 @@ public class Investiment {
             this.tipo = "basso";
         }
     }
-
+    @Override
+    public String toString(){
+        return tipo+'/'+valore+'/'+durata;
+    }
 
     public Investiment(final String tipo, double valore, int durata)
      {
@@ -43,8 +46,7 @@ public class Investiment {
             double rendimentoMensile = rendimento / 12.0;
             double guadagno = valore;
 
-            for (int i = 0; i < durata; i++) {
-                guadagno *= (1 + rendimentoMensile);
+            for (int i = 0; i < durata; i++) {guadagno *= (1 + rendimentoMensile);
             }
 
             guadagno -= valore * rischio;

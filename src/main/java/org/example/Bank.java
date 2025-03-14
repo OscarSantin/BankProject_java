@@ -10,7 +10,7 @@ public class Bank {
         File file = new File(filePath);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file,true))) {
             writer.write(cliente.getNome()+cliente.getCognome()+';'+cliente.getPassword()+';'+cliente.getSaldo()+';'
-                    +cliente.getDebito()+ ';'+cliente.getPortafoglio()+';'+cliente.getInvestimenti().toString()+';'+'\n');
+                   +cliente.getDebito()+ ';'+cliente.getPortafoglio()+';'+cliente.getInvestimenti().toString()+';'+ cliente.formatInvestiments()+'\n');
         } catch (IOException e) {
             System.out.println("Errore: " + e.getMessage());
         }
@@ -24,24 +24,21 @@ public class Bank {
              while ((line = br.readLine()) != null) {
                  String name=line.substring(0,line.indexOf(";"));
                  String password;
-                 line=line.substring(line.indexOf(";")+1,line.length()-1);
+                 line=line.substring(line.indexOf(";")+1);
                  password=line.substring(0,line.indexOf(";"));
                  String saldo;
-                 line=line.substring(line.indexOf(";")+1,line.length()-1);
+                  line=line.substring(line.indexOf(";")+1);
                  saldo=line.substring(0,line.indexOf(";"));
                  String debito;
-                 line=line.substring(line.indexOf(";")+1,line.length()-1);
+                 line=line.substring(line.indexOf(";")+1);
                  debito=line.substring(0,line.indexOf(";"));
                  String portafoglio;
-                 line=line.substring(line.indexOf(";")+1,line.length());
+                 line=line.substring(line.indexOf(";")+1);
                  portafoglio=line.substring(0,line.indexOf(";"));
                  if(name.equals(cliente.getNome()+cliente.getCognome()) && password.equals(cliente.getPassword())){
-                    cliente.setClient(Double.parseDouble(saldo),Double.parseDouble(debito),Double.parseDouble(portafoglio));
+                    cliente.setClient(Double.parseDouble(saldo),Double.parseDouble(debito),Double.parseDouble(portafoglio),cliente.getInvestimenti());
                     System.out.println("Utente trovato!");
                     return true;
-                 }
-                 else{
-                     return false;
                  }
              }
         } catch (Exception e) {
@@ -50,10 +47,10 @@ public class Bank {
         return false;
     }
 
-    public void avanzareTempo(int mesi) {
-        for (Client cliente : clienti) {
+    public void avanzareTempo(Client cliente,int mesi) {
+       // for (Client cliente : clienti) {
             cliente.avanzaTempo(mesi);
-        }
+       // }
     }
 
     public final void mostraStatoDopoAvanzamento()  {
@@ -73,23 +70,26 @@ public class Bank {
                     break;
                 }
                 String name=line.substring(0,line.indexOf(";"));
-                line=line.substring(line.indexOf(";")+1,line.length()-1);
+                line=line.substring(line.indexOf(";")+1);
                 String saldo;
-                line=line.substring(line.indexOf(";")+1,line.length()-1);
+                line=line.substring(line.indexOf(";")+1);
                 saldo=line.substring(0,line.indexOf(";"));
                 String debito;
-                line=line.substring(line.indexOf(";")+1,line.length()-1);
+                line=line.substring(line.indexOf(";")+1);
                 debito=line.substring(0,line.indexOf(";"));
                 String portafoglio;
-                line=line.substring(line.indexOf(";")+1,line.length());
+                line=line.substring(line.indexOf(";")+1);
                 portafoglio=line.substring(0,line.indexOf(";"));
-                System.out.println("Name: "+name+" Saldo: "+saldo+"\nDebito: "+debito+" Portafoglio: "+ portafoglio+"\n");
+                line=line.substring(line.indexOf(";")+1);
+                String investimentiAttivi=line.substring(0,line.indexOf(";"));
+                line=line.substring(line.indexOf(";")+1);
+                String investimentiTot=line.substring(0,line.indexOf(";"));
+                System.out.println("Name: "+name+" Saldo: "+saldo+"\nDebito: "+debito+" Portafoglio: "+ portafoglio+"\nInvestimenti attivi=" +investimentiAttivi+ "\nInvestimentsHistory=" + investimentiTot + "\n");
             }
         } catch (Exception e) {
             e.getMessage();
             System.out.println("Errore: file non trovato!");
         }
-
     }
 
     public Client getCliente(int indice) {
