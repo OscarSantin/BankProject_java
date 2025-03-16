@@ -51,7 +51,7 @@ public class App
                     System.out.println("Inserisci la password del cliente: ");
                     password=newStr();
                     cliente=new Client(nome, cognome,password);
-                    if(banca.findClient(cliente)==false){
+                    if(!banca.findClient(cliente)){
                         System.out.println("Utente non trovato, creazione nuovo utente");
                         banca.aggiungiCliente(cliente);
                         System.out.println("Cliente aggiunto con successo!");
@@ -59,7 +59,6 @@ public class App
                     break;
                 }
                 case 2: {
-                    //my_scan.nextLine();
                     double importo;
                     System.out.println("Inserisci l'importo da depositare: ");
                     importo=newpositiveDouble();
@@ -67,7 +66,6 @@ public class App
                     break;
                 }
                 case 3: {
-                    //my_scan.nextLine();
                     double importo;
                     System.out.println("Inserisci l'importo da prelevare: ");
                     importo=newpositiveDouble();
@@ -75,7 +73,6 @@ public class App
                     break;
                 }
                 case 4: {
-                    int indice;
                     double valore;
                     int durata;
                     String tipo;
@@ -96,12 +93,7 @@ public class App
                     int mesi;
                     System.out.println("Inserisci il numero di mesi da avanzare: ");
                     mesi=my_scan.nextInt();
-
                     banca.avanzareTempo(cliente,mesi);
-
-
-                    System.out.println("\nStato aggiornato dei clienti dopo l'avanzamento del tempo:");
-                    banca.mostraStatoDopoAvanzamento();
 
                     break;
                 }
@@ -118,13 +110,11 @@ public class App
                     System.out.println("Scelta non valida. Riprova.\n");
             }
         }
-
-        return ;
     }
     public static String newStr(){
         Scanner scan=new Scanner(System.in);
         String s=scan.nextLine();
-        while(s.isEmpty() || s.isBlank()){
+        while(s.isBlank()){
             System.out.println("La stringa non può essere vuota o essere composta solo da spazi!");
             s=scan.nextLine().trim();
         }

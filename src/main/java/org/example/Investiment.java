@@ -3,10 +3,10 @@ package org.example;
 public class Investiment {
 
     private String tipo;
-    private double valore;
+    private final double valore;
     private double rendimento;
     private double rischio;
-    private int durata;
+    private final int durata;
     private int mesiPassati;
 
     private void impostaParametri(final String tipo) {
@@ -57,8 +57,6 @@ public class Investiment {
     }
 
     public final Boolean isTerminato()  { return mesiPassati >= durata; }
-    public final String getTipo()  { return tipo; }
     public final double  getValore()  { return valore; }
-    public final double getRendimento()  { return rendimento; }
-};
+}
 

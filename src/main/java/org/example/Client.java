@@ -9,7 +9,7 @@ public class Client {
     private double debito;
     private double portafoglio;
     private ArrayList<Investiment> investimenti=new ArrayList<>();
-    private ArrayList<Investiment> investimentsHistory=new ArrayList<>();
+    private final ArrayList<Investiment> investimentsHistory=new ArrayList<>();
 
 
     public Client(final String nome, final String cognome,final String password)
@@ -29,7 +29,6 @@ public class Client {
         this.saldo=saldo;
         this.portafoglio=portafoglio;
         this.investimenti=investiments;
-        //this.investimentsHistory=investimentsHistory;
      }
 
     public void deposita(double importo) {
@@ -46,7 +45,7 @@ public class Client {
             saldo -= ripagato;
             debito -= ripagato;
         }
-        System.out.println("Deposito andatoa buon fine!");
+        System.out.println("Deposito andato a buon fine!");
 
         addInfo();
     }
@@ -104,19 +103,6 @@ public class Client {
                 '}';
     }
 
-    public final void visualizzaStato()  {             // TESTA
-        System.out.println(this.toString());
-        for (final Investiment investimento : investimenti) {
-            if (investimento.isTerminato()) {
-                System.out.println("Investimento completato: " + investimento.getTipo()
-                        + " - Guadagno: " + investimento.calcolaGuadagno() + " �");
-            } else {
-                System.out.println("Investimento in corso: " + investimento.getTipo());
-            }
-        }
-        return;
-    }
-
     public boolean aggiungiInvestimento(final Investiment inv) {
         if (saldo < inv.getValore()) {
             System.out.println("Fondi insufficienti per effettuare l'investimento!");
@@ -133,8 +119,6 @@ public class Client {
         return true;
     }
 
-    public void aggiungiDebito(double importo) { debito += importo; }
-
     public ArrayList<Investiment> getInvestimenti() { return investimenti; }
 
     public final void addInfo(){
@@ -147,7 +131,7 @@ public class Client {
                 lines.add(line);
                 String name=line.substring(0,line.indexOf(";"));
                 String password;
-                line=line.substring(line.indexOf(";")+1,line.length()-1);
+                line=line.substring(line.indexOf(";")+1);
                 password=line.substring(0,line.indexOf(";"));
                 String investimentsHistory="";
                 line=line.substring(line.indexOf(";")+1);
@@ -155,7 +139,9 @@ public class Client {
                 line=line.substring(line.indexOf(";")+1);
                 line=line.substring(line.indexOf(";")+1);
                 line=line.substring(line.indexOf(";")+1);
-                investimentsHistory=line.substring(0,line.indexOf(";"));
+                if(line.contains(";")){
+                    investimentsHistory=line.substring(0,line.indexOf(";"));
+                }
                 if(name.equals(this.getNome()+this.getCognome()) && password.equals(this.getPassword())){
                     lines.removeLast();
                     newLine=this.getNome()+this.getCognome()+';'+this.password+';'+saldo+';'+debito+';'+portafoglio+';'+formatInvestiments()+';'+formatInvestimentsHistory(investimentsHistory)+';';
@@ -177,8 +163,8 @@ public class Client {
         }
     }
     public String formatInvestiments(){
-        String totalInv=new String("");
-        if(investimenti.size()==0){
+        String totalInv="";
+        if(investimenti.isEmpty()){
             return "";
         }
         for(int c=0;c< investimenti.size();c++){
@@ -189,14 +175,24 @@ public class Client {
     }
 
     public String formatInvestimentsHistory(String previousones){
-        String totalInv=new String("");
-        totalInv+=previousones;
-        if(investimentsHistory.size()==0){
-            return "";
+        String totalInv= "";
+        if(previousones.isEmpty()){
+            totalInv=previousones;
+        }else{
+            totalInv+=previousones+",";
+        }
+        if(investimentsHistory.isEmpty()){
+            return previousones;
         }
         for(int c=0;c< investimentsHistory.size();c++){
-            totalInv+=investimentsHistory.get(c)+",";
+            if(!previousones.contains(investimentsHistory.get(c).toString())){
+                totalInv+=investimentsHistory.get(c)+",";
+            }
+            else{
+                totalInv+=",";
+            }
         }
+        totalInv=totalInv.replaceAll(",,",",");
         totalInv=totalInv.substring(0,totalInv.length()-1);
         return totalInv;
     }
@@ -206,5 +202,5 @@ public class Client {
     public final String getCognome()  { return cognome; }
     protected final String getPassword(){return password;}
     protected final double getPortafoglio(){return portafoglio;}
-};
+}
 
