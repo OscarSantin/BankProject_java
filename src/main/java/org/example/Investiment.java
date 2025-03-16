@@ -31,7 +31,7 @@ public class Investiment {
     }
 
     public Investiment(final String tipo, double valore, int durata)
-     {
+    {
         this.tipo=tipo;
         this.valore=valore;
         this.durata=durata;

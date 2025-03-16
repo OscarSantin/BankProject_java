@@ -13,14 +13,14 @@ public class Client {
 
 
     public Client(final String nome, final String cognome,final String password)
-     {
-         this.nome=nome;
-         this.cognome=cognome;
-         this.password=password;
-         this.saldo=(0.0);
-         this.debito=(0.0);
-         this.portafoglio=(100.0);
-     }
+    {
+        this.nome=nome;
+        this.cognome=cognome;
+        this.password=password;
+        this.saldo=(0.0);
+        this.debito=(0.0);
+        this.portafoglio=(100.0);
+    }
 
     public Client() {}
 
@@ -29,7 +29,7 @@ public class Client {
         this.saldo=saldo;
         this.portafoglio=portafoglio;
         this.investimenti=investiments;
-     }
+    }
 
     public void deposita(double importo) {
         if (importo > portafoglio) {
