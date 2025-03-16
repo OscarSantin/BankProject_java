@@ -42,7 +42,6 @@ public class App
             }
             switch (scelta) {
                 case 1: {
-                    //my_scan.nextLine();
                     String nome, cognome, password;
                     System.out.println("Inserisci il nome del cliente: ");
                     nome=newStr();
